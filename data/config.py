@@ -1,8 +1,9 @@
 # config.py
 
 # gets home dir cross platform
-
 import math
+import cv2
+cv2.setNumThreads(0)  # pytorch issue 1355: possible deadlock in dataloader
 
 # note: if you used our download scripts, this should be right
 VOCroot = '/data/PASCAL_VOC/VOCdevkit'  # path to VOCdevkit root dir
