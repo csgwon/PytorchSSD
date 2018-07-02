@@ -2,9 +2,30 @@
 
 # gets home dir cross platform
 
+import math
+
 # note: if you used our download scripts, this should be right
-VOCroot = '/home/user/Database/VOCdevkit'  # path to VOCdevkit root dir
-COCOroot = '/home/user/Database/MSCOCO2017'
+VOCroot = '/data/PASCAL_VOC/VOCdevkit'  # path to VOCdevkit root dir
+COCOroot = '/data/MSCOCO/'
+COCO_train_year = '2014'
+COCO_test_year = '2015'
+
+# min/max sizes given by following equation:
+def get_min_sizes(n_feature_maps, min_dim, min_ratio = 20, max_ratio = 90):
+    step = int(math.floor((max_ratio - min_ratio) / (n_feature_maps - 2)))
+    min_sizes = []
+    for ratio in range(min_ratio, max_ratio + 1, step):
+        min_sizes.append(min_dim * ratio / 100.)
+    min_sizes = [min_dim*0.1]+min_sizes
+    return min_sizes
+
+def get_max_sizes(n_feature_maps, min_dim, min_ratio = 20, max_ratio = 90):
+    step = int(math.floor((max_ratio - min_ratio) / (n_feature_maps - 2)))
+    max_sizes = []
+    for ratio in range(min_ratio, max_ratio + 1, step):
+        max_sizes.append(min_dim * (ratio + step) / 100.)
+    max_sizes = [min_dim*0.2]+max_sizes
+    return max_sizes
 
 # RFB CONFIGS
 VOC_300 = {
@@ -14,11 +35,29 @@ VOC_300 = {
 
     'steps': [8, 16, 32, 64, 100, 300],
 
-    'min_sizes': [30, 60, 111, 162, 213, 264],
+    'min_sizes': get_min_sizes(6, 300),
 
-    'max_sizes': [60, 111, 162, 213, 264, 315],
+    'max_sizes': get_max_sizes(6, 300),
 
     'aspect_ratios': [[2, 3], [2, 3], [2, 3], [2, 3], [2], [2]],
+
+    'variance': [0.1, 0.2],
+
+    'clip': True,
+}
+
+VOC_300_mod = {
+    'feature_maps': [75, 38, 19, 10, 5, 3, 1],
+
+    'min_dim': 300,
+
+    'steps': [4, 8, 16, 32, 64, 100, 300],
+
+    'min_sizes': get_min_sizes(7, 300),
+
+    'max_sizes': get_max_sizes(7, 300),
+
+    'aspect_ratios': [[2, 3], [2, 3], [2, 3], [2, 3], [2, 3], [2], [2]],
 
     'variance': [0.1, 0.2],
 
@@ -50,11 +89,29 @@ COCO_300 = {
 
     'steps': [8, 16, 32, 64, 100, 300],
 
-    'min_sizes': [21, 45, 99, 153, 207, 261],
+    'min_sizes': get_min_sizes(7, 300),
 
-    'max_sizes': [45, 99, 153, 207, 261, 315],
+    'max_sizes': get_max_sizes(7, 300),
 
     'aspect_ratios': [[2, 3], [2, 3], [2, 3], [2, 3], [2], [2]],
+
+    'variance': [0.1, 0.2],
+
+    'clip': True,
+}
+
+COCO_300_mod = {
+    'feature_maps': [75, 38, 19, 10, 5, 3, 1],
+
+    'min_dim': 300,
+
+    'steps': [4, 8, 16, 32, 64, 100, 300],
+
+    'min_sizes': get_min_sizes(7, 300),
+
+    'max_sizes': get_max_sizes(7, 300),
+
+    'aspect_ratios': [[2, 3], [2, 3], [2, 3], [2, 3], [2, 3], [2], [2]],
 
     'variance': [0.1, 0.2],
 
